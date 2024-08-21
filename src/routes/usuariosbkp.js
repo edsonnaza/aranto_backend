@@ -14,8 +14,8 @@ const usuarios = Router();
 
 usuarios.get("/", usuariosFiltrados);
 usuarios.get("/top", getTopUsuarios);
-usuarios.get("/usuario", getUsuario);
-usuarios.post("/", postUsuario);
+usuarios.get("/user", getUsuario);
+usuarios.post("/user", postUsuario);
 usuarios.put("/", putUsuario);
 usuarios.put("/rol", putUsuarioRol);
 usuarios.put("/delete", deleteUsuario);

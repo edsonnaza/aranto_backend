@@ -73,7 +73,7 @@ const putUsuario = async (req, res) => {
       email_usuario,
       usuario_id
     );
-    res.status(200).send(`se modifico el usuario ${usuario_id}`);
+    res.status(200).send(`Se actualizó el usuario ${usuario_id}`);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -85,9 +85,9 @@ const deleteUsuario = async (req, res) => {
   try {
     const response = await borrarUsuario(usuario_id);
     if (response.inactivo === true) {
-      return res.status(200).send(`se elimino el usuario ${usuario_id}`);
+      return res.status(200).send(`Se eliminó el usuario ${usuario_id}`);
     } else {
-      return res.status(200).send(`se activo el usuario ${usuario_id}`);
+      return res.status(200).send(`Se activó el usuario ${usuario_id}`);
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -98,7 +98,7 @@ const putUsuarioRol = async (req, res) => {
   const { roles, usuario_id } = req.body;
   try {
     const response = modificarRol(usuario_id, roles);
-    res.status(200).send(`se modifico el rol del usuario ${usuario_id}`);
+    res.status(200).send(`Se modificó el rol del usuario ${usuario_id}`);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

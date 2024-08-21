@@ -2,12 +2,24 @@ require("dotenv").config();
 const { Sequelize } = require("sequelize");
 const fs = require("fs");
 const path = require("path");
-const { DB } = process.env;
+// Destructurar las variables de entorno para la configuración de Sequelize
+const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME } = process.env;
 
-const sequelize = new Sequelize(DB, {
-  logging: false,
-  native: false,
-});
+const sequelize = new Sequelize(
+  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`,
+    
+// DB_DEPLOY,
+  { logging: false, 
+    native: false,
+    alter: true,
+    force:false,
+     // dialectOptions: {
+     //     ssl:{
+     //         require:true,
+     //     },
+     // },
+  }
+);
 const basename = path.basename(__filename);
 
 const modelDefiners = [];
@@ -42,18 +54,18 @@ const {
   Productos,
   Promociones,
   Tallas,
-  Usuarios,
+  Users,
 } = sequelize.models;
 
 // RELACIONES DE MODELOS (TABLAS)
-// Usuarios 1:1 Entidades
-Usuarios.hasOne(Entidades, {
+// Users 1:1 Entidades
+Users.hasOne(Entidades, {
   foreignKey: {
     allowNull: false,
     name: "usuario_id",
   },
 });
-Entidades.belongsTo(Usuarios, {
+Entidades.belongsTo(Users, {
   foreignKey: {
     allowNull: false,
     name: "usuario_id",
@@ -74,15 +86,15 @@ Direcciones.belongsTo(Entidades, {
   },
 });
 
-// Usuarios N:N Productos
-Usuarios.belongsToMany(Productos, {
+// Users N:N Productos
+Users.belongsToMany(Productos, {
   through: "Productos_Favoritos",
   foreignKey: {
     allowNull: false,
     name: "usuario_id",
   },
 });
-Productos.belongsToMany(Usuarios, {
+Productos.belongsToMany(Users, {
   through: "Productos_Favoritos",
   foreignKey: {
     allowNull: false,
@@ -90,28 +102,28 @@ Productos.belongsToMany(Usuarios, {
   },
 });
 
-// Usuarios 1:1 Carritos
-Usuarios.hasOne(Carritos, {
+// Users 1:1 Carritos
+Users.hasOne(Carritos, {
   foreignKey: {
     allowNull: false,
     name: "usuario_id",
   },
 });
-Carritos.belongsTo(Usuarios, {
+Carritos.belongsTo(Users, {
   foreignKey: {
     allowNull: false,
     name: "usuario_id",
   },
 });
 
-// Usuarios 1:N Ordenes
-Usuarios.hasMany(Ordenes, {
+// Users 1:N Ordenes
+Users.hasMany(Ordenes, {
   foreignKey: {
     allowNull: false,
     name: "usuario_id",
   },
 });
-Ordenes.belongsTo(Usuarios, {
+Ordenes.belongsTo(Users, {
   foreignKey: {
     allowNull: false,
     name: "usuario_id",
@@ -132,14 +144,14 @@ Productos_Descuentos.belongsTo(Productos, {
   },
 });
 
-Usuarios.belongsToMany(Productos, {
+Users.belongsToMany(Productos, {
   through: "Calificaciones",
   foreignKey: {
     allowNull: false,
     name: "usuario_id",
   },
 });
-Productos.belongsToMany(Usuarios, {
+Productos.belongsToMany(Users, {
   through: "Calificaciones",
   foreignKey: {
     allowNull: false,
@@ -161,5 +173,5 @@ module.exports = {
   Productos,
   Promociones,
   Tallas,
-  Usuarios,
+  Users,
 };

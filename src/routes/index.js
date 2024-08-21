@@ -1,5 +1,9 @@
 const { Router } = require("express");
-const usuarios = require("./usuarios");
+const authenticateToken = require('../middlewares/authenticateToken');
+//const users = require("./usuarios");
+const {login} = require('../controllers/auth/login');
+const {addNewUser} = require('../controllers/auth/addNewUser');
+const { getAllUsers } = require('../controllers/auth/getAllUsers');
 const productos = require("./productos");
 const ordenes = require("./ordenes");
 const promociones = require("./promociones");
@@ -15,10 +19,28 @@ const tallas = require("./tallas");
 const payment = require("./payment");
 const vaciarTabla = require("./vaciarTabla.js");
 const reviews = require("./reviews.js");
-
+const verifyApiKey = require('../middlewares/verifyApiKey');
 const router = Router();
 
-router.use("/usuarios", usuarios);
+// Ruta de bienvenida
+router.get('/', function(req, res) {
+    res.send('Welcome to Aranto');
+});
+
+// Ruta de login
+router.post('/login', login);
+
+// Ruta para añadir nuevo usuario
+router.post('/user', addNewUser);
+
+// Middleware de verificación de API Key para todas las rutas siguientes
+//router.use(verifyApiKey);
+
+// Middleware de autenticación para rutas protegidas
+router.use(authenticateToken);
+
+// Rutas protegidas
+router.get('/user/pagination', getAllUsers);
 router.use("/productos", productos);
 router.use("/ordenes", ordenes);
 router.use("/promociones", promociones);

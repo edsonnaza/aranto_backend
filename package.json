@@ -1,20 +1,22 @@
 {
-  "name": "karokids_server",
+  "name": "aranto_server",
   "version": "1.0.0",
-  "description": "KaroKids Server",
+  "description": "Aranto BackEnd Server",
   "main": "index.js",
   "scripts": {
     "test": "test",
     "start": "nodemon index.js"
   },
-  "author": "edsonnaza, EFDillmann, hfarinez05, JGerFuentes, LGKaufmann  LisandrOviedo, sfpuertas, ThiagoJMartins",
+  "author": "Ing. Edson Sanchez",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.6.7",
+    "bcrypt": "^5.1.1",
     "cloudinary": "^2.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.4",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
     "mercadopago": "^2.0.7",
     "morgan": "^1.10.0",
     "nodemailer": "^6.9.10",

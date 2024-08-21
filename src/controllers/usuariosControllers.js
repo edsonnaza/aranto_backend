@@ -1,4 +1,4 @@
-const { Usuarios, Carritos, Ordenes } = require("../db");
+const { Users, Carritos, Ordenes } = require("../db");
 const { inhabilitarUsuarioMail } = require("./mailSenderControllers");
 
 const topUsuarios = async (top) =>{
@@ -6,7 +6,7 @@ const topUsuarios = async (top) =>{
     const ordenes = await Ordenes.findAll({
             include: [
               {
-                model: Usuarios,
+                model: Users,
                 attributes: ["nombre_usuario", "apellido_usuario"],
               },
             ],
