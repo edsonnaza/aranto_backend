@@ -4,6 +4,8 @@ const authenticateToken = require('../middlewares/authenticateToken');
 const {login} = require('../controllers/auth/login');
 const {addNewUser} = require('../controllers/auth/addNewUser');
 const { getAllUsers } = require('../controllers/auth/getAllUsers');
+const {tokenRefresh} = require('../controllers/auth/tokenRefresh')
+const {tokenRevoke } = require('../controllers/auth/tokenRevoke');
 const productos = require("./productos");
 const ordenes = require("./ordenes");
 const promociones = require("./promociones");
@@ -24,7 +26,7 @@ const router = Router();
 
 // Ruta de bienvenida
 router.get('/', function(req, res) {
-    res.send('Welcome to Aranto');
+    res.status(200).send('Welcome to Aranto');
 });
 
 // Ruta de login
@@ -35,6 +37,13 @@ router.post('/user', addNewUser);
 
 // Middleware de verificación de API Key para todas las rutas siguientes
 //router.use(verifyApiKey);
+
+// Route para refresh el token
+router.post('/token/refresh',tokenRefresh);
+
+ 
+// Ruta para revocar el token
+router.post('/token/revoke', tokenRevoke);
 
 // Middleware de autenticación para rutas protegidas
 router.use(authenticateToken);

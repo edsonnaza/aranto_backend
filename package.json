@@ -4,7 +4,7 @@
   "description": "Aranto BackEnd Server",
   "main": "index.js",
   "scripts": {
-    "test": "test",
+    "test": "jest --runInBand --detectOpenHandles --watchAll",
     "start": "nodemon index.js"
   },
   "author": "Ing. Edson Sanchez",
@@ -24,5 +24,9 @@
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
   }
 }

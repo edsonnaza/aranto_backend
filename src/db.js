@@ -55,9 +55,20 @@ const {
   Promociones,
   Tallas,
   Users,
+  RefreshToken,
 } = sequelize.models;
 
 // RELACIONES DE MODELOS (TABLAS)
+//Token managment
+Users.hasMany(RefreshToken, {
+  foreignKey: 'userId',
+  as: 'refreshTokens',
+});
+
+RefreshToken.belongsTo(Users, {
+  foreignKey: 'userId',
+  as: 'user',
+});
 // Users 1:1 Entidades
 Users.hasOne(Entidades, {
   foreignKey: {
