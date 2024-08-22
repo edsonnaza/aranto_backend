@@ -1,4 +1,4 @@
-# KaroKids Server v1.0
+# Aranto Server v1.0
 
 ---
 
@@ -6,7 +6,6 @@
 
 - [edsonnaza](https://github.com/edsonnaza)
 - [EFDillmann](https://github.com/EFDillmann)
-- [hfarinez05](https://github.com/hfarinez05)
 - [JGerFuentes](https://github.com/JGerFuentes)
 - [LGKaufmann](https://github.com/LGKaufmann)
 - [LisandrOviedo](https://github.com/LisandrOviedo)
