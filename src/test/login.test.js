@@ -1,7 +1,7 @@
 const request = require('supertest');
 const app = require('../server'); 
 
-describe('POST /', () => {
+describe('Test for Login process', () => {
   it('Welcome to Aranto', async ()=>{
     const response = await request(app).get('/api/');
     expect(response.status).toBe(200);
@@ -12,11 +12,11 @@ it('debería devolver 401 si la contraseña es incorrecta', async () => {
   const response = await request(app)
       .post('/api/login')
       .send({
-          email: 'edsonnaza@email.com',
+          email: 'test@email.com',
           password: 'Contrasenha12',
       });
 
-  console.log('Respuesta del test:', response.status, response.body);
+  //console.log('Respuesta del test:', response.status, response.body);
 
   expect(response.status).toBe(401);
   expect(response.body).toHaveProperty('message', 'La contraseña es incorrecta.');
@@ -43,8 +43,8 @@ it('deberia devolver 404 si el email no existente', async () => {
     const response = await request(app)
     .post('/api/login')
     .send({
-      email: 'edsonnaza@email.com',
-      password: 'Login123456',
+      email: 'test@email.com',
+      password: 'Test123456',
     });
     
     //console.log('response test',response.status,response.body)
@@ -70,7 +70,7 @@ it('deberia devolver 404 si el email no existente', async () => {
     const response = await request(app)
     .post('/api/login')
     .send({
-      email: 'edsonnaza@email.com',
+      email: 'test@email.com',
       password: '',
     });
     

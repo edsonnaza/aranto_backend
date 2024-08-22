@@ -4,7 +4,7 @@
   "description": "Aranto BackEnd Server",
   "main": "index.js",
   "scripts": {
-    "test": "jest --runInBand --detectOpenHandles --watchAll",
+    "test": "jest --runInBand --detectOpenHandles --verbose --watchAll",
     "start": "nodemon index.js"
   },
   "author": "Ing. Edson Sanchez",

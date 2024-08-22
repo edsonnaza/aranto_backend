@@ -22,6 +22,7 @@ const payment = require("./payment");
 const vaciarTabla = require("./vaciarTabla.js");
 const reviews = require("./reviews.js");
 const verifyApiKey = require('../middlewares/verifyApiKey');
+const { logout } = require("../controllers/auth/logout.js");
 const router = Router();
 
 // Ruta de bienvenida
@@ -44,6 +45,9 @@ router.post('/token/refresh',tokenRefresh);
  
 // Ruta para revocar el token
 router.post('/token/revoke', tokenRevoke);
+
+//Ruta para hacer logout
+router.post('/logout', logout)
 
 // Middleware de autenticación para rutas protegidas
 router.use(authenticateToken);
