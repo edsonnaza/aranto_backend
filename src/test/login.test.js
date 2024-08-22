@@ -53,5 +53,32 @@ it('deberia devolver 404 si el email no existente', async () => {
     expect(response.body).toHaveProperty('refreshToken');
   });
 
+  it('debería devolver 400 si el email está vacío.', async () => {
+    const response = await request(app)
+    .post('/api/login')
+    .send({
+      email: '',
+      password: 'Login123456',
+    });
+    
+    //console.log('response test',response.status,response.body)
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('message','Por favor, proporciona un email.');
+     
+  });
+  it('debería devolver 400 si la contraseña está vacío.', async () => {
+    const response = await request(app)
+    .post('/api/login')
+    .send({
+      email: 'edsonnaza@email.com',
+      password: '',
+    });
+    
+    //console.log('response test',response.status,response.body)
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('message','Por favor, proporciona una contraseña.');
+     
+  });
+
   
 });

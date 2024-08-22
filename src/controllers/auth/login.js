@@ -5,11 +5,11 @@ const { Users, RefreshToken } = require('../../db');
 const login = async (req, res) => {
     const { email, password } = req.body;
     if (!email) {
-        return res.status(400).json({ error: "Por favor, proporciona un email." });
+        return res.status(400).json({ message: "Por favor, proporciona un email." });
     }
 
     if (!password) {
-        return res.status(400).json({ error: "Por favor, proporciona una contraseña." });
+        return res.status(400).json({ message: "Por favor, proporciona una contraseña." });
     }
     try {
       // 1. Verificar si el email está registrado
