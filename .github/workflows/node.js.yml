@@ -40,7 +40,14 @@ jobs:
 
       - name: Install Node.js dependencies
         run: npm install
-
+     
+      - name: Run Synchronization Script
+        run: node sync.js
+        env:
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: localhost
+          DB_NAME: ${{ secrets.DB_NAME }}
       # - name: Run Migrations
       #   run: npx sequelize-cli db:migrate
       #   env:
