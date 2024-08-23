@@ -2,47 +2,59 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    /**
-     * Add altering commands here.
-     *
-     * Example:
-     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-     */
-  
-      await queryInterface.createTable('Users', {
-        id: {
-          type: Sequelize.INTEGER,
-          autoIncrement: true,
-          primaryKey: true,
+  async up(queryInterface, Sequelize) {
+    // Crear la tabla 'Users'
+    await queryInterface.createTable('Users', {
+      usuario_id: {
+        type: Sequelize.UUID,
+        primaryKey: true,
+        allowNull: false,
+        defaultValue: Sequelize.UUIDV4,
+      },
+      user_name: {
+        type: Sequelize.STRING,
+        allowNull: true, // Considera si quieres que sea obligatorio
+      },
+      user_lastname: {
+        type: Sequelize.STRING,
+        allowNull: true, // Considera si quieres que sea obligatorio
+      },
+      email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        validate: {
+          isEmail: true, // Validación para asegurar que sea un correo electrónico
         },
-        email: {
-          type: Sequelize.STRING,
-          allowNull: false,
-          unique: true,
-        },
-        password: {
-          type: Sequelize.STRING,
-          allowNull: false,
-        },
-        createdAt: {
-          allowNull: false,
-          type: Sequelize.DATE,
-        },
-        updatedAt: {
-          allowNull: false,
-          type: Sequelize.DATE,
-        },
-      });
+        unique: true, // Asegura que el email sea único en la tabla
+      },
+      password: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      roles: {
+        type: Sequelize.ENUM("client", "admin"),
+        defaultValue: "client",
+      },
+      inactivo: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false, // Valor booleano por defecto
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+    });
   },
 
-  async down (queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
+  async down(queryInterface, Sequelize) {
+    // Eliminar la tabla 'Users'
     await queryInterface.dropTable('Users');
   }
 };
