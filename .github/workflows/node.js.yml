@@ -39,7 +39,7 @@ jobs:
 
     - name: Wait for PostgreSQL
       run: |
-        until pg_isready -h localhost -p 5432 -U ${{ secrets.DB_USER }}; do
+        until pg_isready -h localhost -p 5432 -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }}; do
           echo "Waiting for PostgreSQL..."
           sleep 2
         done
