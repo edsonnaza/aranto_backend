@@ -32,13 +32,16 @@ jobs:
           apt-get update
           apt-get install --yes postgresql-client
 
-      - name: Verify PostgreSQL connection
+      - name: Wait for PostgreSQL to be ready
         run: |
-          psql -h postgres -d aranto -U postgres -c 'SELECT 1;'
-        env:
-          PGPASSWORD: 1234
+          until pg_isready -h postgres -p 5432 -U postgres; do
+            echo "Waiting for PostgreSQL to be ready..."
+            sleep 5
+          done
+
       - name: Create test database
-        run: psql -c 'CREATE DATABASE ${DB_NAME};' -U ${DB_USER} -h postgres
+        run: |
+          psql -h postgres -U postgres -c 'CREATE DATABASE ${DB_NAME};'
         env:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
@@ -47,20 +50,18 @@ jobs:
 
       - name: Fresh database setup
         run: |
-            npx sequelize-cli db:migrate:undo:all --env test
-            npx sequelize-cli db:migrate --env test
-            npx sequelize-cli db:seed:all --env test
+          npx sequelize-cli db:migrate:undo:all --env test
+          npx sequelize-cli db:migrate --env test
+          npx sequelize-cli db:seed:all --env test
         env:
           DB_USER: postgres
           DB_PASSWORD: 1234
           DB_HOST: postgres
           DB_TEST_NAME: aranto_test
-        
-        
 
       - name: Install Node.js dependencies
         run: npm install
-     
+
       - name: Run Synchronization Script
         run: node index.js
         env:
@@ -68,6 +69,7 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_HOST: postgres
           DB_NAME: ${{ secrets.DB_NAME }}
+
       - name: Run Migrations
         run: npx sequelize-cli db:migrate
         env:
