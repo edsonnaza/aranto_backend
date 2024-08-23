@@ -38,7 +38,7 @@ jobs:
         env:
           PGPASSWORD: 1234
       - name: Create test database
-        run: psql -c 'CREATE DATABASE ${DB_NAME};' -U ${DB_USER} -h ${DB_HOST}
+        run: psql -c 'CREATE DATABASE ${DB_NAME};' -U ${DB_USER} -h postgres
         env:
           DB_USER: postgres
           DB_PASSWORD: 1234
