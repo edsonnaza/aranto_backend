@@ -41,33 +41,33 @@ jobs:
         env:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
-      - name: Create test database
-        run: |
-          PGPASSWORD=1234 psql -h postgres -U postgres -c 'CREATE DATABASE aranto_test;'
-        env:
-          DB_USER: postgres
-          DB_PASSWORD: 1234
-          DB_HOST: postgres
-          DB_NAME: aranto_test
+      # - name: Create test database
+      #   run: |
+      #     PGPASSWORD=1234 psql -h postgres -U postgres -c 'CREATE DATABASE aranto_test;'
+      #   env:
+      #     DB_USER: postgres
+      #     DB_PASSWORD: 1234
+      #     DB_HOST: postgres
+      #     DB_NAME: aranto_test
 
-      - name: Fresh database setup
-        run: |
-          npx sequelize-cli db:migrate:undo:all --env test
-          npx sequelize-cli db:migrate --env test
-          npx sequelize-cli db:seed:all --env test
-        env:
-          DB_USER: postgres
-          DB_PASSWORD: 1234
-          DB_HOST: postgres
-          DB_TEST_NAME: aranto_test
+      # - name: Fresh database setup
+      #   run: |
+      #     npx sequelize-cli db:migrate:undo:all --env test
+      #     npx sequelize-cli db:migrate --env test
+      #     npx sequelize-cli db:seed:all --env test
+      #   env:
+      #     DB_USER: postgres
+      #     DB_PASSWORD: 1234
+      #     DB_HOST: postgres
+      #     DB_TEST_NAME: aranto_test
 
-      - name: Run Synchronization Script
-        run: node index.js
-        env:
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_HOST: postgres
-          DB_NAME: ${{ secrets.DB_NAME }}
+      # - name: Run Synchronization Script
+      #   run: node index.js
+      #   env:
+      #     DB_USER: ${{ secrets.DB_USER }}
+      #     DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      #     DB_HOST: postgres
+      #     DB_NAME: ${{ secrets.DB_NAME }}
 
       - name: Run Migrations
         run: npx sequelize-cli db:migrate
