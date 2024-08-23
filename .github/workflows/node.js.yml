@@ -13,17 +13,6 @@ jobs:
     strategy:
       matrix:
         node-version: [20.x]
-        database-name:
-        - aranto
-        database-password:
-        - 1234
-        database-user:
-        - postgres
-        database-host:
-        - 127.0.0.1
-        database-port:
-        - 5432
-
     services:
       postgres:
         image: postgres:latest
@@ -38,7 +27,6 @@ jobs:
             --health-interval 10s
             --health-timeout 5s
             --health-retries 5
-
     steps:
     - uses: actions/checkout@v4
 
