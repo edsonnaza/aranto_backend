@@ -1,83 +1,30 @@
-name: Node.js CI
-
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
+name: PostgreSQL
+on: push
 jobs:
-  build:
+  postgres:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [20.x]
-
+    container: node:latest
     services:
       postgres:
-        image: postgres:11.6-alpine
+        image: postgres:latest
         env:
-          POSTGRES_USER: ${{ secrets.DB_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.DB_NAME }}
+          POSTGRES_DB: postgres_db
+          POSTGRES_PASSWORD: postgres_password
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: postgres_user
         ports:
           - 5432:5432
-        options: --health-cmd="pg_isready -U postgres --health-interval=10s --health-timeout=5s --health-retries=5
-
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-
-    - run: npm ci
-
-    - run: npm run build --if-present
-
-    - run: npm test
-
-    - name: Install PostgreSQL Client
-      run: |
-        sudo apt-get update
-        sudo apt-get install --yes postgresql-client
-
-    - name: Verify Database Connection
-      run: |
-        psql -h localhost -d ${{ secrets.DB_NAME }} -U ${{ secrets.DB_USER }} -c 'SELECT 1;'
-      env:
-        PGPASSWORD: ${{ secrets.DB_PASSWORD }}
-
-    - name: Run Synchronization Script
-      run: node sync.js
-      env:
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_HOST: localhost
-        DB_NAME: ${{ secrets.DB_NAME }}
-
-    - name: Run Migrations
-      run: npx sequelize-cli db:migrate
-      env:
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_HOST: localhost
-        DB_NAME: ${{ secrets.DB_NAME }}
-
-    - name: Run Seeders
-      run: npx sequelize-cli db:seed:all
-      env:
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_HOST: localhost
-        DB_NAME: ${{ secrets.DB_NAME }}
-
-    - name: Deploy to Server
-      env:
-        TOKEN_SECRET: ${{ secrets.TOKEN_SECRET }}
-        REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
-        ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
-      run: ssh user@server "cd /path/to/app && git pull && npm install && npm run build"
+      - name: Install PostgreSQL client
+        run: |
+          apt-get update
+          apt-get install --yes postgresql-client
+      - name: Query database
+        run: psql -h postgres -d postgres_db -U postgres_user -c 'SELECT 1;'
+        env:
+          PGPASSWORD: postgres_password
