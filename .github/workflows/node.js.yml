@@ -42,9 +42,9 @@ jobs:
         env:
           DB_USER: postgres
           DB_PASSWORD: 1234
-          DB_HOST: localhost
+          DB_HOST: postgres
           DB_NAME: aranto_test
-          
+
       - name: Fresh database setup
         run: |
             npx sequelize-cli db:migrate:undo:all --env test
@@ -53,7 +53,7 @@ jobs:
         env:
           DB_USER: postgres
           DB_PASSWORD: 1234
-          DB_HOST: localhost
+          DB_HOST: postgres
           DB_TEST_NAME: aranto_test
         
         
@@ -66,14 +66,14 @@ jobs:
         env:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_HOST: localhost
+          DB_HOST: postgres
           DB_NAME: ${{ secrets.DB_NAME }}
       - name: Run Migrations
         run: npx sequelize-cli db:migrate
         env:
           DB_USER: postgres
           DB_PASSWORD: 1234
-          DB_HOST: localhost
+          DB_HOST: postgres
           DB_NAME: aranto
 
       - name: Run Seeders
@@ -81,7 +81,7 @@ jobs:
         env:
           DB_USER: postgres
           DB_PASSWORD: 1234
-          DB_HOST: localhost
+          DB_HOST: postgres
           DB_NAME: aranto
 
       - name: Run Tests
@@ -89,5 +89,5 @@ jobs:
         env:
           DB_USER: postgres
           DB_PASSWORD: 1234
-          DB_HOST: localhost
+          DB_HOST: postgres
           DB_NAME: aranto
