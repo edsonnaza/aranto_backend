@@ -1,4 +1,4 @@
-name: PostgreSQL
+name: ArantoServerBackend
 
 on:
   push:
@@ -37,6 +37,26 @@ jobs:
           psql -h postgres -d aranto -U postgres -c 'SELECT 1;'
         env:
           PGPASSWORD: 1234
+      - name: Create test database
+        run: psql -c 'CREATE DATABASE ${DB_NAME};' -U ${DB_USER} -h ${DB_HOST}
+        env:
+          DB_USER: postgres
+          DB_PASSWORD: 1234
+          DB_HOST: localhost
+          DB_NAME: aranto_test
+          
+      - name: Fresh database setup
+        run: |
+            npx sequelize-cli db:migrate:undo:all --env test
+            npx sequelize-cli db:migrate --env test
+            npx sequelize-cli db:seed:all --env test
+        env:
+          DB_USER: postgres
+          DB_PASSWORD: 1234
+          DB_HOST: localhost
+          DB_TEST_NAME: aranto_test
+        
+        
 
       - name: Install Node.js dependencies
         run: npm install
@@ -46,14 +66,14 @@ jobs:
         env:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_HOST: postgres
+          DB_HOST: localhost
           DB_NAME: ${{ secrets.DB_NAME }}
       - name: Run Migrations
         run: npx sequelize-cli db:migrate
         env:
           DB_USER: postgres
           DB_PASSWORD: 1234
-          DB_HOST: postgres
+          DB_HOST: localhost
           DB_NAME: aranto
 
       - name: Run Seeders
@@ -61,7 +81,7 @@ jobs:
         env:
           DB_USER: postgres
           DB_PASSWORD: 1234
-          DB_HOST: postgres
+          DB_HOST: localhost
           DB_NAME: aranto
 
       - name: Run Tests
@@ -69,5 +89,5 @@ jobs:
         env:
           DB_USER: postgres
           DB_PASSWORD: 1234
-          DB_HOST: postgres
+          DB_HOST: localhost
           DB_NAME: aranto
