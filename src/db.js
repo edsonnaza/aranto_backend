@@ -3,21 +3,21 @@ const { Sequelize } = require("sequelize");
 const fs = require("fs");
 const path = require("path");
 // Destructurar las variables de entorno para la configuración de Sequelize
-const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME } = process.env;
+const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_DEPLOY } = process.env;
 
 const sequelize = new Sequelize(
-  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`,
+ // `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`,
     
-// DB_DEPLOY,
+ DB_DEPLOY,
   { logging: false, 
     native: false,
     alter: true,
     force:false,
-     // dialectOptions: {
-     //     ssl:{
-     //         require:true,
-     //     },
-     // },
+     dialectOptions: {
+         ssl:{
+             require:true,
+         },
+     },
   }
 );
 const basename = path.basename(__filename);
