@@ -40,10 +40,10 @@ jobs:
       - name: Create test database
         run: psql -c 'CREATE DATABASE ${DB_NAME};' -U ${DB_USER} -h postgres
         env:
-          DB_USER: postgres
-          DB_PASSWORD: 1234
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_HOST: postgres
-          DB_NAME: aranto_test
+          DB_NAME: ${{ secrets.DB_TEST_NAME }}
 
       - name: Fresh database setup
         run: |
