@@ -32,21 +32,23 @@ jobs:
           apt-get update
           apt-get install --yes postgresql-client
 
-      - name: Wait for PostgreSQL to be ready
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Verify PostgreSQL connection
         run: |
-          until pg_isready -h postgres -p 5432 -U postgres; do
-            echo "Waiting for PostgreSQL to be ready..."
-            sleep 5
-          done
+          PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h postgres -U postgres -c 'SELECT 1;'
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
       - name: Create test database
         run: |
-          PGPASSWORD=1234 psql -h postgres -U postgres -c 'CREATE DATABASE aranto_test;'
-        # env:
-        #   DB_USER: ${{ secrets.DB_USER }}
-        #   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        #   DB_HOST: postgres
-        #   DB_NAME: ${{ secrets.DB_TEST_NAME }}
+          PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h postgres -U postgres -c 'CREATE DATABASE ${{ secrets.DB_TEST_NAME }};'
+        env:
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: postgres
+          DB_NAME: ${{ secrets.DB_TEST_NAME }}
 
       - name: Fresh database setup
         run: |
@@ -58,9 +60,6 @@ jobs:
           DB_PASSWORD: 1234
           DB_HOST: postgres
           DB_TEST_NAME: aranto_test
-
-      - name: Install Node.js dependencies
-        run: npm install
 
       - name: Run Synchronization Script
         run: node index.js
