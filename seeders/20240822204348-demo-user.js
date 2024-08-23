@@ -1,5 +1,6 @@
 'use strict';
 const bcrypt = require('bcrypt');
+const { v4: uuidv4 } = require('uuid'); // Importar el generador de UUID
 const saltRounds = 10;
 
 module.exports = {
@@ -8,6 +9,7 @@ module.exports = {
     const hashedPassword = await bcrypt.hash('Login123456', saltRounds);
 
     return queryInterface.bulkInsert('Users', [{
+      usuario_id: uuidv4(),
       email: 'test@email.com',
       password: hashedPassword, // Contraseña encriptada
       user_name: 'Test',
