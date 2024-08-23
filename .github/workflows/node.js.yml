@@ -44,18 +44,18 @@ jobs:
     - name: Run Synchronization Script
       run: node sync.js
       env:
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_HOST: localhost
-        DB_NAME: aranto
-
-    - name: Run Migrations
-      run: npx sequelize-cli db:migrate
-      env:
         DB_USER: myuser
         DB_PASSWORD: mypassword
         DB_HOST: localhost
         DB_NAME: aranto
+
+    # - name: Run Migrations
+    #   run: npx sequelize-cli db:migrate
+    #   env:
+    #     DB_USER: myuser
+    #     DB_PASSWORD: mypassword
+    #     DB_HOST: localhost
+    #     DB_NAME: aranto
 
     - name: Run Seeders
       run: npx sequelize-cli db:seed:all
