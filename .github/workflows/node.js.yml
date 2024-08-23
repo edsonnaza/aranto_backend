@@ -14,7 +14,6 @@ jobs:
         env:
           POSTGRES_DB: aranto
           POSTGRES_PASSWORD: 1234
-          POSTGRES_PORT: 5432
           POSTGRES_USER: postgres
         ports:
           - 5432:5432
@@ -41,14 +40,6 @@ jobs:
 
       - name: Install Node.js dependencies
         run: npm install
-
-      - name: Run Synchronization Script
-        run: node sync.js
-        env:
-          DB_USER: postgres
-          DB_PASSWORD: 1234
-          DB_HOST: postgres
-          DB_NAME: aranto
 
       - name: Run Migrations
         run: npx sequelize-cli db:migrate
