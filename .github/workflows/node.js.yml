@@ -37,7 +37,7 @@ jobs:
 
       - name: Verify PostgreSQL connection
         run: |
-          PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h postgres -U postgres -c 'SELECT 1;'
+          PGPASSWORD=1234 psql -h postgres -U postgres -c 'SELECT 1;'
         env:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
