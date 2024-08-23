@@ -1,13 +1,25 @@
 const request = require('supertest');
 const app = require('../server');
-const { RefreshToken } = require('../db');
+const { RefreshToken, Users } = require('../db');
 
 describe('Test logout process', () => {
     let accessToken;
     let refreshToken;
-    let userId='97f6da38-a8a6-4001-a682-8dc5d001a851';
+    
+    let userId;
 
     beforeAll(async () => {
+
+    // Buscar el ID del usuario con el correo electrónico especificado
+    const userEmail = 'test@email.com'; // Correo electrónico del usuario de prueba
+    const user = await Users.findOne({ where: { email: userEmail } });
+    
+    if (!user) {
+        throw new Error(`No se encontró un usuario con el correo electrónico ${userEmail}`);
+    }
+
+    userId = user.usuario_id;
+  
         // Suponiendo que tienes un endpoint de login para obtener un accessToken y un refreshToken
         const loginResponse = await request(app)
             .post('/api/login')
