@@ -42,5 +42,34 @@ jobs:
       - name: Install Node.js dependencies
         run: npm install
 
+      - name: Run Synchronization Script
+        run: node sync.js
+        env:
+          DB_USER: postgres
+          DB_PASSWORD: 1234
+          DB_HOST: postgres
+          DB_NAME: aranto
+
+      - name: Run Migrations
+        run: npx sequelize-cli db:migrate
+        env:
+          DB_USER: postgres
+          DB_PASSWORD: 1234
+          DB_HOST: postgres
+          DB_NAME: aranto
+
+      - name: Run Seeders
+        run: npx sequelize-cli db:seed:all
+        env:
+          DB_USER: postgres
+          DB_PASSWORD: 1234
+          DB_HOST: postgres
+          DB_NAME: aranto
+
       - name: Run Tests
         run: npm test
+        env:
+          DB_USER: postgres
+          DB_PASSWORD: 1234
+          DB_HOST: postgres
+          DB_NAME: aranto
