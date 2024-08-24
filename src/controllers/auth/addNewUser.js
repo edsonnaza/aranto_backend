@@ -5,7 +5,15 @@ const addNewUser = async (req, res) => {
   const { email, password, user_name, user_lastname } = req.body;
 
   if (!email || !password || !user_name || !user_lastname) {
-    return res.status(400).send(`{Empty fields: email: ${req.body.email}, password: ${password}, name: ${user_name}, lastname: ${user_lastname}}`);
+    return res.status(400).json({
+      error: 'Empty fields',
+      details: {
+        email: req.body.email,
+        password: password,
+        name: user_name,
+        lastname: user_lastname
+      }
+    });
   }
 
   try {
