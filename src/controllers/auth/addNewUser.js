@@ -18,16 +18,16 @@ const addNewUser = async (req, res) => {
     let emptyFields = {};
 
 if (!req.body.email) {
-  emptyFields.email = 'Email is required';
+  emptyFields.email = 'Email es un campo obligatorio, favor ingresar un email válido';
 }
 if (!password) {
-  emptyFields.password = 'Password is required';
+  emptyFields.password = 'Contraseña es un campo obligatorio, favor ingresar una contraseña';
 }
 if (!user_name) {
-  emptyFields.name = 'Name is required';
+  emptyFields.name = 'Nombre es un campo obligatorio, favor ingresar una contraseña';
 }
 if (!user_lastname) {
-  emptyFields.lastname = 'Lastname is required';
+  emptyFields.lastname = 'Apellido es un campo obligatorio, favor ingresar el apellido';
 }
 
 if (Object.keys(emptyFields).length > 0) {
