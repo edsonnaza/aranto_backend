@@ -32,7 +32,7 @@ if (!user_lastname) {
 
 if (Object.keys(emptyFields).length > 0) {
   return res.status(400).json({
-    error: 'Empty fields',
+    error: 'Campos vacíos',
     details: emptyFields
   });
 }
