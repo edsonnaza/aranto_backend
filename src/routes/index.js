@@ -36,8 +36,6 @@ router.post('/login', login);
 // Ruta para añadir nuevo usuario
 router.post('/user', addNewUser);
 
-// Middleware de verificación de API Key para todas las rutas siguientes
-//router.use(verifyApiKey);
 
 // Route para refresh el token
 router.post('/token/refresh',tokenRefresh);
