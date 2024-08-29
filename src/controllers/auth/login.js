@@ -45,8 +45,20 @@ const login = async (req, res) => {
             token: refreshToken
         });
 
-        // Enviar tokens como respuesta
-        res.status(200).json({ accessToken, refreshToken });
+  // Responder solo con user, accessToken y refreshToken
+  res.status(200).json({
+    user: {
+        usuario_id: user.usuario_id,
+        user_name: user.user_name,
+        user_lastname: user.user_lastname,
+        email: user.email,
+        roles: user.roles,
+        inactivo: user.inactivo,
+        avatar:user.avatar,
+    },
+    accessToken,
+    refreshToken
+});
     } catch (error) {
         // Manejo de errores internos del servidor
         console.error('Error en el proceso de login:', error);

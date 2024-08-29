@@ -1,8 +1,15 @@
 const { Users } = require('../../db');
 const bcrypt = require('bcrypt');
+const cloudinary = require("cloudinary").v2;
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true,
+});
 
 const addNewUser = async (req, res) => {
-  const { email, password, user_name, user_lastname } = req.body;
+  const { email, password, user_name, user_lastname,avatar } = req.body;
 
   // if (!email || !password || !user_name || !user_lastname) {
   //   return res.status(400).json({
@@ -46,12 +53,31 @@ if (Object.keys(emptyFields).length > 0) {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     if (!hashedPassword) res.status(500).json({'error':`Error with hashed password ${hashedPassword}`});
 
+
+    const avatar_cloud = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload(
+        avatar,
+        {
+          upload_preset: "preset_imagenes_empleados",
+          allowed_formats: ["png", "jpg", "jpeg", "gif", "webp"],
+        },
+        (err, result) => {
+          if (err) {
+            reject(new Error("Error al subir la imagen primaria: " + JSON.stringify(err)));        
+          } else {
+            resolve(result.secure_url);
+          }
+        }
+      );
+    });
+
     const user = await Users.create({
      // id: null,
       email,
       user_name,
       user_lastname,
-      password: hashedPassword
+      password: hashedPassword,
+      avatar:avatar_cloud
     });
 
     return res.status(201).json(user);
