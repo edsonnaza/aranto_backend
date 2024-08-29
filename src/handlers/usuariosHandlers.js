@@ -8,6 +8,7 @@ const {
   modificarRol,
   topUsuarios
 } = require("../controllers/usuariosControllers");
+const {updateUserAvatarController} = require('../controllers/auth/updateUserAvatarController')
 
 const getTopUsuarios = async(req, res) =>{
   const {top} = req.body
@@ -37,6 +38,8 @@ const getTopUsuarios = async(req, res) =>{
 //     return res.status(400).json({ error: error.message });
 //   }
 // };
+
+
 
 const getUsuario = async (req, res) => {
   const { email_usuario } = req.query;
@@ -98,14 +101,47 @@ const putUsuarioRol = async (req, res) => {
   const { roles, usuario_id } = req.body;
   try {
     const response = modificarRol(usuario_id, roles);
-    res.status(200).send(`Se modificó el rol del usuario ${usuario_id}`);
+    res.status(200).json({message:`Se modificó el rol del usuario ${usuario_id}`});
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
+ 
+
+const putUpddateUsuarioAvatarHandler = async (req, res) => {
+    const { avatar, usuario_id } = req.body;
+
+    try {
+        // Validar si `usuario_id` está presente
+        if (!usuario_id || !usuario_id.trim()) {
+            return res.status(400).json({ message: 'Usuario Id no proporcionado' });
+        }
+
+        // Validar si `avatar` está presente
+        if (!avatar || !avatar.trim()) {
+            return res.status(400).json({ message: 'Avatar no proporcionado' });
+        }
+
+        // Si ambas validaciones pasan, proceder a actualizar el avatar
+        const response = await updateUserAvatarController(usuario_id, avatar);
+
+        // Verificar si la respuesta contiene un error
+        if (response.error) {
+            return res.status(400).json({ message: response.error });
+        }
+
+        // Si todo es exitoso, enviar un mensaje de éxito
+        res.status(200).send('Se modificó el avatar del usuario actual');
+    } catch (error) {
+        // Manejar cualquier error que ocurra en el bloque try
+        res.status(400).json({ error: error.message });
+    }
+};
+
 
 module.exports = {
   // getUsuarios,
+  putUpddateUsuarioAvatarHandler,
   getUsuario,
   postUsuario,
   putUsuario,

@@ -6,6 +6,7 @@ const {addNewUser} = require('../controllers/auth/addNewUser');
 const { getAllUsers } = require('../controllers/auth/getAllUsers');
 const {tokenRefresh} = require('../controllers/auth/tokenRefresh')
 const {tokenRevoke } = require('../controllers/auth/tokenRevoke');
+
 const productos = require("./productos");
 const ordenes = require("./ordenes");
 const promociones = require("./promociones");
@@ -21,6 +22,7 @@ const tallas = require("./tallas");
 const payment = require("./payment");
 const vaciarTabla = require("./vaciarTabla.js");
 const reviews = require("./reviews.js");
+const users = require("./users");
 const verifyApiKey = require('../middlewares/verifyApiKey');
 const { logout } = require("../controllers/auth/logout.js");
 const router = Router();
@@ -51,6 +53,7 @@ router.post('/logout', logout)
 router.use(authenticateToken);
 
 // Rutas protegidas
+router.use("/users",users)
 router.get('/user/pagination', getAllUsers);
 router.use("/productos", productos);
 router.use("/ordenes", ordenes);
