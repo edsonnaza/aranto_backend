@@ -58,12 +58,12 @@ if (Object.keys(emptyFields).length > 0) {
       cloudinary.uploader.upload(
         avatar,
         {
-          upload_preset: "preset_imagenes_empleados",
+          upload_preset: "avatar",
           allowed_formats: ["png", "jpg", "jpeg", "gif", "webp"],
         },
         (err, result) => {
           if (err) {
-            reject(new Error("Error al subir la imagen primaria: " + JSON.stringify(err)));        
+            reject(new Error("Error al subir el avatar al servidor: " + JSON.stringify(err)));        
           } else {
             resolve(result.secure_url);
           }
@@ -85,7 +85,7 @@ if (Object.keys(emptyFields).length > 0) {
   } catch (error) {
     // Verificar si el error es un error de validación por correo electrónico duplicado
     if (error.name === 'SequelizeUniqueConstraintError' && error.fields.email) {
-      return res.status(400).send('Email already exists');
+      return res.status(400).send('El Email ya existe');
     }
      // Verificar si el error es un error 404 (Recurso no encontrado)
      if (error.name === 'SequelizeEmptyResultError') {

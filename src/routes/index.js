@@ -1,4 +1,5 @@
 const { Router } = require("express");
+
 const authenticateToken = require('../middlewares/authenticateToken');
 //const users = require("./usuarios");
 const {login} = require('../controllers/auth/login');
@@ -25,6 +26,8 @@ const reviews = require("./reviews.js");
 const users = require("./users");
 const verifyApiKey = require('../middlewares/verifyApiKey');
 const { logout } = require("../controllers/auth/logout.js");
+// Configuración de multer para manejar archivos
+
 const router = Router();
 
 // Ruta de bienvenida
