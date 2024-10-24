@@ -1,4 +1,5 @@
-const { DataTypes, UUIDV4, DATEONLY } = require("sequelize");
+const { DataTypes, UUIDV4,DATEONLY,NOW } = require("sequelize");
+const dayjs = require('dayjs');
 
 module.exports = (sequelize) => {
   sequelize.define("Pacientes", {
@@ -11,48 +12,33 @@ module.exports = (sequelize) => {
     nombres: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      validate: {
-        len: {
-          args: [5, 50],
-          msg: 'El nombre debe tener entre 5 y 50 caracteres.',
-        },
-        notNull: {
-          msg: 'Favor ingrese su nombre, este campo no puede estar vacío.',
-        },
-      },
     },
     apellidos: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      validate: {
-        len: {
-          args: [5, 50],
-          msg: 'El apellido debe tener entre 5 y 50 caracteres.',
-        },
-        notNull: {
-          msg: 'Favor ingrese su apellido, este campo no puede estar vacío.',
-        },
-      },
     },
     full_name: {
       type: DataTypes.STRING(100),
-      allowNull: true, // Este campo será llenado automáticamente
+      allowNull: true,
     },
-    imagen_principal: {
-      type: DataTypes.STRING,
-      allowNull: false,
+   documento_numero: {
+        type:DataTypes.STRING(100),
+        allowNull:true,
+        default:"No registrado."
     },
-    genero: {
-      type: DataTypes.ENUM("Hombre", "Mujer"),
-      allowNull: false,
+    tipo_documento:{
+      type:DataTypes.ENUM("Cédula de Identidad", "Pasaporte","RG","Otros"),
+      allowNull:false,
+      default:"Otros"
     },
-    estado_civil: {
-      type: DataTypes.ENUM("Soltero", "Casado", "Divorciado", "Otro"),
-      allowNull: false,
+    imagen_principal:{
+      type:DataTypes.TEXT,
+      allowNull:true
     },
     fechaIngreso: {
       type: DataTypes.DATE,
       allowNull: false,
+      defaultValue: NOW,
     },
     fechaNacimiento: {
       type: DataTypes.DATEONLY,
@@ -67,6 +53,11 @@ module.exports = (sequelize) => {
     hooks: {
       beforeSave: (paciente) => {
         paciente.full_name = `${paciente.nombres} ${paciente.apellidos}`;
+        
+        // Convertir fechaIngreso a formato ISO si es necesario
+        if (paciente.fechaIngreso && typeof paciente.fechaIngreso === 'string') {
+          paciente.fechaIngreso = dayjs(paciente.fechaIngreso, 'DD-MM-YYYY').format('YYYY-MM-DD');
+        }
       },
     },
   });

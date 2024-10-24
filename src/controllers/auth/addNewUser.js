@@ -10,6 +10,7 @@ cloudinary.config({
 
 const addNewUser = async (req, res) => {
   const { email, password, user_name, user_lastname,avatar } = req.body;
+ 
 
   // if (!email || !password || !user_name || !user_lastname) {
   //   return res.status(400).json({
@@ -79,8 +80,20 @@ if (Object.keys(emptyFields).length > 0) {
       password: hashedPassword,
       avatar:avatar_cloud
     });
+    return res.status(201).json({
+      message: 'Usuario registrado con éxito',
+      saved: true,
+      user: {
+        usuario_id: user.id,
+        roles: 'client',
+        email: user.email,
+        user_name: user.user_name,
+        user_lastname: user.user_lastname,
+        avatar: user.avatar
+      }
+    });
 
-    return res.status(201).json(user);
+    //return res.status(201).json(user);
 
   } catch (error) {
     // Verificar si el error es un error de validación por correo electrónico duplicado

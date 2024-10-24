@@ -2,6 +2,7 @@ require("dotenv").config();
 const { Sequelize } = require("sequelize");
 const fs = require("fs");
 const path = require("path");
+//const SeguroMedico = require("./models/SeguroMedico");
 // Destructurar las variables de entorno para la configuración de Sequelize
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_DEPLOY } = process.env;
 
@@ -12,7 +13,7 @@ const sequelize = new Sequelize(
   { logging: false, 
     native: false,
     alter: true,
-    force:true,
+    force:false,
     //  dialectOptions: {
     //      ssl:{
     //          require:true,
@@ -43,6 +44,9 @@ let capsEntries = entries.map((entry) => [
 sequelize.models = Object.fromEntries(capsEntries);
 
 const {
+  SeguroMedico,
+  SeguroMedicoPaciente,
+  Pacientes,
   Calificaciones,
   Carritos,
   Colores,
@@ -56,6 +60,8 @@ const {
   Tallas,
   Users,
   RefreshToken,
+
+  
 } = sequelize.models;
 
 // RELACIONES DE MODELOS (TABLAS)
@@ -76,6 +82,17 @@ Users.hasOne(Entidades, {
     name: "usuario_id",
   },
 });
+
+SeguroMedico.belongsTo(SeguroMedico, {
+  foreignKey: 'seguromedico_id',
+  onDelete: 'CASCADE',
+});
+
+SeguroMedico.hasMany(SeguroMedicoPaciente, {
+foreignKey: 'seguromedico_id',
+onDelete: 'CASCADE',
+});
+
 Entidades.belongsTo(Users, {
   foreignKey: {
     allowNull: false,
@@ -185,4 +202,7 @@ module.exports = {
   Promociones,
   Tallas,
   Users,
+  SeguroMedico,
+  SeguroMedicoPaciente,
+  Pacientes
 };

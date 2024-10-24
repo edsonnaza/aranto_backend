@@ -8,6 +8,7 @@ const { getAllUsers } = require('../controllers/auth/getAllUsers');
 const {tokenRefresh} = require('../controllers/auth/tokenRefresh')
 const {tokenRevoke } = require('../controllers/auth/tokenRevoke');
 
+const pacientes =require("./pacientesRoute")
 const productos = require("./productos");
 const ordenes = require("./ordenes");
 const promociones = require("./promociones");
@@ -24,6 +25,7 @@ const payment = require("./payment");
 const vaciarTabla = require("./vaciarTabla.js");
 const reviews = require("./reviews.js");
 const users = require("./users");
+const seguroMedicoRoute = require("./seguroMedicoRoute");
 const verifyApiKey = require('../middlewares/verifyApiKey');
 const { logout } = require("../controllers/auth/logout.js");
 // Configuración de multer para manejar archivos
@@ -58,6 +60,11 @@ router.use(authenticateToken);
 // Rutas protegidas
 router.use("/users",users)
 router.get('/user/pagination', getAllUsers);
+
+// Seguro Medico
+router.use("/seguro-medico", seguroMedicoRoute);
+
+router.use("/pacientes", pacientes);
 router.use("/productos", productos);
 router.use("/ordenes", ordenes);
 router.use("/promociones", promociones);
