@@ -8,9 +8,9 @@ module.exports = (sequelize) => {
         {
             seguromedpac_id: {
                 type: DataTypes.UUID,
-                primaryKey: true,
-                allowNull: false,
-                defaultValue: UUIDV4,
+				primaryKey: true,
+				allowNull: false,
+				defaultValue: UUIDV4,
             },
             paciente_id: {
                 type: DataTypes.UUID, // Debes asegurarte de que el tipo de datos sea el mismo que empleado_id en el modelo de empleados
@@ -21,7 +21,7 @@ module.exports = (sequelize) => {
                 allowNull: false,
             },
 
-            importe_mensual:{
+            importe_cobertura:{
                 type:DataTypes.DECIMAL(10,2),
                 allowNull:false,
             },

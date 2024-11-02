@@ -1,5 +1,5 @@
 const {Router} = require ('express');
-const { getAllSegurosMedicosEmpleados,
+const { getAllSegurosMedicosPacientes,
     getSeguroMedicoPaciente,
     postSeguroMedicoPaciente,
     putSeguroMedicoPaciente,
@@ -7,7 +7,7 @@ const { getAllSegurosMedicosEmpleados,
    } = require('../handlers/SeguroMedicoPacienteHandler.js');
 const SeguroMedicoPacienteRoute = Router();
 
-SeguroMedicoPacienteRoute.get('/',getAllSegurosMedicosEmpleados)
+SeguroMedicoPacienteRoute.get('/',getAllSegurosMedicosPacientes)
 SeguroMedicoPacienteRoute.get('/:id',getSeguroMedicoPaciente)
 SeguroMedicoPacienteRoute.post('/',postSeguroMedicoPaciente)
 SeguroMedicoPacienteRoute.put('/:id',putSeguroMedicoPaciente)

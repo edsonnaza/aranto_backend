@@ -35,11 +35,11 @@ module.exports = (sequelize) => {
       type:DataTypes.TEXT,
       allowNull:true
     },
-    fechaIngreso: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: NOW,
-    },
+    // fechaIngreso: {
+    //   type: DataTypes.DATE,
+    //   allowNull: false,
+    //   defaultValue: NOW,
+    // },
     fechaNacimiento: {
       type: DataTypes.DATEONLY,
       allowNull: false,
@@ -54,11 +54,17 @@ module.exports = (sequelize) => {
       beforeSave: (paciente) => {
         paciente.full_name = `${paciente.nombres} ${paciente.apellidos}`;
         
-        // Convertir fechaIngreso a formato ISO si es necesario
-        if (paciente.fechaIngreso && typeof paciente.fechaIngreso === 'string') {
-          paciente.fechaIngreso = dayjs(paciente.fechaIngreso, 'DD-MM-YYYY').format('YYYY-MM-DD');
-        }
+        // Verificar y convertir fechaIngreso solo si está en un formato distinto a ISO
+        // if (paciente.fechaIngreso && typeof paciente.fechaIngreso === 'string') {
+        //   const parsedDate = dayjs(paciente.fechaIngreso, 'DD-MM-YYYY', true);
+        //   if (parsedDate.isValid()) {
+        //     paciente.fechaIngreso = parsedDate.format('YYYY-MM-DD');
+        //   } else {
+        //     console.log("Fecha de ingreso no está en el formato esperado (DD-MM-YYYY)");
+        //   }
+        // }
       },
-    },
+    }
+    
   });
 };

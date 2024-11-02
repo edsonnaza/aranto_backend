@@ -1,12 +1,28 @@
-const { SeguroMedicoPaciente } = require('../DB_connection');
+const { SeguroMedicoPaciente, Pacientes, SeguroMedico } = require('../db');
 
   
 
 const getAllSegurosPacientesController = async () =>{
-    const response = await SeguroMedicoPaciente.findAll();
+    const response = await SeguroMedicoPaciente.findAll({ 
+        attributes: { exclude: ['seguromedico_id','paciente_id','createdAt', 'updatedAt'] },
+        include: [
+            {
+                model: Pacientes,
+                attributes: ['paciente_id', 'nombres', 'apellidos']
+            },
+            {
+                model: SeguroMedico,
+                attributes: ['seguromedico_nombre']
+            }
+        ],
+        raw: true,
+        nest: true // 
+    
+        });
+    
     
     if(response === null){
-        return('Seguro medico de funcionarios no existe!');
+        return('Seguro medico de pacientes no existe!');
      }else{
         
         return(response);
@@ -39,14 +55,14 @@ const deleteSeguroMedicoPacienteController = async (id,activo) =>{
             throw new Error(`Controller: No se encontró ningún registro del seguro médico con el ID ${id}`);
         }
     } catch (error) {
-        throw new Error(`Error al intentar borrar el seguro médico del empleado: ${error.message}`);
+        throw new Error(`Error al intentar borrar el seguro médico del paciente: ${error.message}`);
     }
       
 }
-const modificarSeguroMedicoPacienteController = async (id, empleado_id, seguromedico_id, importe_mensual,descripcion) => {
+const modificarSeguroMedicoPacienteController = async (id, paciente_id, seguromedico_id, importe_mensual,descripcion) => {
     try {
         const [updatedRowsCount, updatedSegurosMedicos] = await SeguroMedicoPaciente.update(
-            { seguromedico_id, empleado_id, importe_mensual,descripcion },
+            { seguromedico_id, paciente_id, importe_mensual,descripcion },
             { where: { seguromedemp_id:id }, returning: true } // Establece "returning: true" para obtener los registros actualizados
         );
 
@@ -57,21 +73,21 @@ const modificarSeguroMedicoPacienteController = async (id, empleado_id, segurome
             throw new Error(`Controller: No se encontró ningún seguro médico registrado con el ID ${id}`);
         }
     } catch (error) {
-        throw new Error(`Error al modificar el seguro médico del empleado: ${error.message}`);
+        throw new Error(`Error al modificar el seguro médico del paciente: ${error.message}`);
     }
 };
 
-const createSeguroMedicoPacienteController = async ({empleado_id, seguromedico_id, importe_mensual,descripcion}) =>{
+const createSeguroMedicoPacienteController = async ({paciente_id, seguromedico_id, importe_mensual,descripcion}) =>{
    
     try {
        
-        const seguroMedico= await SeguroMedicoPaciente.create({empleado_id, seguromedico_id, importe_mensual,descripcion});
+        const seguroMedico= await SeguroMedicoPaciente.create({paciente_id, seguromedico_id, importe_mensual,descripcion});
        
        
         return seguroMedico;
         
     } catch (error) {
-        throw new Error("Error en el controller al intentar registrar el seguro medico del empleado.: " + error.message);
+        throw new Error("Error en el controller al intentar registrar el seguro medico del paciente.: " + error.message);
     }
 }
 

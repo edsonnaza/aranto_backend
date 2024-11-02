@@ -92,23 +92,22 @@ const getPacientePorIdHandler = async (req, res) => {
       fechaNacimiento,
       estado_civil,
       activo,
+      seguromedico_id
      
      // remuneracion
     } = req.body;
 
-        // Convertir las fechas al formato ISO 'YYYY-MM-DD'
-        const fechaNacimientoISO = dayjs(fechaNacimiento, 'DD/MM/YYYY', true).isValid()
-        ? dayjs(fechaNacimiento, 'DD/MM/YYYY').format('YYYY-MM-DD')
-        : console.log('Error', fechaNacimiento);  // o lanzar un error, dependiendo de cómo quieras manejar esto
+        // Convertir y validar `fechaIngreso` y `fechaNacimiento`
+    const fechaIngresoISO = dayjs(fechaIngreso, 'YYYY-MM-DD', true);
+    const fechaNacimientoISO = dayjs(fechaNacimiento, 'YYYY-MM-DD', true);
 
-        const fechaIngresoISO = dayjs(fechaIngreso, 'DD/MM/YYYY', true).isValid()
-        ? dayjs(fechaIngreso, 'DD/MM/YYYY').format('YYYY-MM-DD')
-        : console.log("Error",fechaIngresoISO);  // o lanzar un error, dependiendo de cómo quieras manejar esto
+    if (!fechaIngresoISO.isValid()) {
+      return res.status(400).json({ error: "Fecha de ingreso no válida. Formato esperado: YYYY-MM-DD" });
+    }
 
-        // Verificar si las fechas son válidas antes de continuar
-        if (!fechaNacimientoISO || !fechaIngresoISO) {
-          return res.status(400).json({ error: 'Formato de fecha inválido' });
-        }
+    if (!fechaNacimientoISO.isValid()) {
+      return res.status(400).json({ error: "Fecha de nacimiento no válida. Formato esperado: YYYY-MM-DD" });
+    }
 
 
     // Crear el nuevo paciente con las fechas convertidas
@@ -127,8 +126,8 @@ console.log('body paciente handler', req.body )
       errors.push('genero');
     }
   
-    if (!fechaIngreso) {
-      errors.push('fechaIngreso');
+    if (!seguromedico_id) {
+      errors.push('Falta el seguro medico id');
     }
   
     if (!fechaNacimiento) {
@@ -151,45 +150,35 @@ console.log('body paciente handler', req.body )
     }
   
     try {
-       
       const response = await createPacienteController({
-        nombres,
-        apellidos,
-        documento_numero,
-        tipo_documento,
-        estado_civil,
-        foto,
-        fechaNacimiento:fechaNacimientoISO,
-        genero,
-        fechaIngreso:fechaIngresoISO,
-        activo,
-      
-        //catFun,
-         
-      }
-      );
-     
-     // res.json(response);
+          nombres,
+          apellidos,
+          documento_numero,
+          tipo_documento,
+          estado_civil,
+          foto,
+          fechaNacimiento, 
+          genero,
+          fechaIngreso,
+          activo,
+          seguromedico_id
+      });
+  
       // Extraer los valores generados tras la creación del paciente
-    const { paciente_id, full_name,imagen_principal } = response;
-       // Si se creó exitosamente el empleado, devolverlo en la respuesta
-     return res.json({
-    
-
-        paciente_id,
-        full_name,
-        imagen_principal,
-       
-
+      const { paciente_id, full_name, imagen_principal } = response;
      
-      
-      message: "Paciente creado exitosamente!"
-    });
-    } catch (error) {
+      // Si se creó exitosamente el empleado, devolverlo en la respuesta
+      return res.json({
+          paciente_id,
+          full_name,
+          imagen_principal,
+          message: "Paciente creado exitosamente!"
+      });
+  } catch (error) {
       console.error('Error al registrar el nuevo paciente:', error);
-      
       res.status(500).json({ error: `Internal server error: ${error.message}` });
-    }
+  }
+  
   };
   
   

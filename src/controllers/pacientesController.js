@@ -4,7 +4,7 @@ require("dotenv").config();
 //         HorasCatedrasTrabajadas, HorasCatedrasMensual, 
 //         TiposDescuento, Descuentos, SeguroMedicopaciente, SeguroMedico, HorasExtras } = require("../DB_connection");
 //const resultadosPaginados = require("../utils/paginacion");
-const {Pacientes} = require("../db");
+const {Pacientes,SeguroMedicoPaciente,SeguroMedico} = require("../db");
 const cloudinary = require("cloudinary").v2;
 const { Sequelize } = require('sequelize');
 
@@ -135,8 +135,8 @@ const allPacientesController = async () => {
   try {
     const pacientes = await Pacientes.findAll({
       attributes: { exclude: ['createdAt', 'updatedAt'] },
-    //   include: [
-    //     {
+      include: [
+        {
     //     model: Remuneraciones,
     //     attributes: [ 'importe', 'activo'], // Puedes seleccionar los atributos que deseas incluir de la tabla de remuneraciones
     //     where: { activo: true } // Puedes filtrar las remuneraciones si lo deseas
@@ -199,17 +199,17 @@ const allPacientesController = async () => {
     // },
 
     // {
-    //   model: SeguroMedicopaciente,
-    //   attributes: ['importe_mensual'],
-    //   include: [
-    //     {
-    //       model: SeguroMedico,
-    //       attributes: ['seguromedico_nombre','descripcion'] // Agrega aquí los campos que deseas mostrar del modelo TiposDescuento
-    //     }
-    //   ]
-    // }
-    
-    // ]
+      model: SeguroMedicoPaciente,
+      attributes: ['seguromedpac_id','importe_cobertura'],
+      include: [
+        {
+          model: SeguroMedico,
+          attributes: ['seguromedico_nombre','descripcion'] // Agrega aquí los campos que deseas mostrar del modelo TiposDescuento
+        }
+          ]
+        }
+      
+      ]
     });
 
     if (pacientes.length === 0) {
@@ -220,7 +220,7 @@ const allPacientesController = async () => {
       const pacientesFormateados = pacientes.map(paciente => {
         return {
           ...paciente.toJSON(),
-          fechaIngreso: paciente.fechaIngreso.toISOString().split('T')[0], // Formatear la fecha a "YYYY-MM-DD"
+          fechaIngreso: paciente.fechaIngreso, // Formatear la fecha a "YYYY-MM-DD"
         //  remuneraciones: paciente.Remuneraciones // Incluir las remuneraciones en el objeto de paciente
         };
       });
@@ -459,7 +459,8 @@ const createPacienteController = async ({
   foto,
   fechaNacimiento,
   genero,
-  fechaIngreso
+  fechaIngreso,
+  seguromedico_id
  
   
 }) => {
@@ -472,7 +473,8 @@ const createPacienteController = async ({
     fechaNacimiento,
     estado_civil,
     genero,
-    fechaIngreso
+    seguromedico_id
+    
      
     
   });
@@ -495,6 +497,8 @@ const createPacienteController = async ({
       );
     });
 
+   
+
     // Crear el paciente
     const paciente = await Pacientes.create({
       nombres,
@@ -506,6 +510,7 @@ const createPacienteController = async ({
       genero,
       estado_civil,
       fechaIngreso,
+    
      
     });
 
@@ -519,8 +524,9 @@ if (paciente) {
 //     await guardarRemuneracion(pacienteId, remuneracion.importe);
 //   }
 //   //Guarda el el seguro del paciente
-  if (seguromedico) {
-    await asociarSeguroMedicoPaciente(paciente, [seguroMedicoPaciente.seguromedico_id]);
+  console.log({'seguromedico_id en el controller':seguromedico_id})
+  if (seguromedico_id) {
+    await asociarSeguroMedicoPaciente(pacienteId, seguromedico_id );
   }
 }
 
@@ -558,18 +564,36 @@ const getPacientePorIdController = async (id) => {
 //   }
 // };
 
-// const asociarCatFun = async (paciente, catfunIds) => {
-//   try {
-//     // Asocia las categorías funcionales (CatFun) con el paciente
-//     await paciente.addCatFun(catfunIds);
+const asociarSeguroMedicoPaciente = async (pacienteId, seguromedicoId) => {
+  console.log({'seguromedico_id':seguromedicoId})
+  try {
+    // Asocia el seguro médico con el paciente
+   // await paciente.addSeguroMedicoPaciente([seguromedico_id]);
+    // const paciente = await SeguroMedicoPaciente.create({
+    //         paciente_id: pacienteId,
+    //         seguromedico_id: seguromedico_id,
+    //         importe_cobertura:0,
+    //         descripcion:'ninguna'
 
-//     return true; // Devuelve verdadero si la asociación se realizó correctamente
-//   } catch (error) {
-//     // Maneja cualquier error que ocurra durante la asociación de categorías funcionales
-//     console.error("Error al asociar categorías del paciente:", error);
-//     throw new Error("Error al asociar categorías del paciente: " + error.message);
-//   }
-// };
+    //       });
+
+          /// Asociar el seguro médico al paciente
+         
+    await SeguroMedicoPaciente.create({
+      paciente_id:  pacienteId,
+      seguromedico_id:seguromedicoId,
+      importe_cobertura:0,
+      descripcion:'ninguna',
+    });
+
+    return true; // Devuelve verdadero si la asociación se realizó correctamente
+  } catch (error) {
+    // Maneja cualquier error que ocurra durante la asociación del seguro médico
+    console.error("Error al asociar seguro médico con el paciente:", error);
+    throw new Error("Error al asociar seguro médico con el paciente: " + error.message);
+  }
+};
+
 
 // const updateHorasExtras = async (paciente_id, horasExtras) => {
 //   try {

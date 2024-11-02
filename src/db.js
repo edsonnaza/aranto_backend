@@ -83,15 +83,26 @@ Users.hasOne(Entidades, {
   },
 });
 
-SeguroMedico.belongsTo(SeguroMedico, {
+// SeguroMedico 1:N SeguroMedicoPaciente
+SeguroMedico.hasMany(SeguroMedicoPaciente, {
+  foreignKey: 'seguromedico_id',
+  onDelete: 'CASCADE',
+});
+SeguroMedicoPaciente.belongsTo(SeguroMedico, {
   foreignKey: 'seguromedico_id',
   onDelete: 'CASCADE',
 });
 
-SeguroMedico.hasMany(SeguroMedicoPaciente, {
-foreignKey: 'seguromedico_id',
-onDelete: 'CASCADE',
+// Pacientes 1:N SeguroMedicoPaciente
+Pacientes.hasMany(SeguroMedicoPaciente, {
+  foreignKey: 'paciente_id',
+  onDelete: 'CASCADE',
 });
+SeguroMedicoPaciente.belongsTo(Pacientes, {
+  foreignKey: 'paciente_id',
+  onDelete: 'CASCADE',
+});
+
 
 Entidades.belongsTo(Users, {
   foreignKey: {
@@ -129,6 +140,8 @@ Productos.belongsToMany(Users, {
     name: "producto_id",
   },
 });
+
+ 
 
 // Users 1:1 Carritos
 Users.hasOne(Carritos, {

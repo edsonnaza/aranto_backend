@@ -1,13 +1,13 @@
 const { getAllSegurosPacientesController, getSeguroMedicoPacienteController, 
     createSeguroMedicoPacienteController, modificarSeguroMedicoPacienteController, 
-    deleteSeguroMedicoPacienteController } = require("../controllers/SeguroMedicoPacienteController.js");
+    deleteSeguroMedicoPacienteController } = require("../controllers/seguroMedicoPacientesController")
 
 
     const getAllSegurosMedicosPacientes = async (req, res) => {
         try {
             const response = await getAllSegurosPacientesController();
             if (response.length === 0) {
-                return res.status(404).json({ message: "No existen datos de seguro médico empleados registrados." });
+                return res.status(404).json({ message: "No existen datos de seguro médico pacientes registrados." });
             }
             res.status(200).json(response);
         } catch (error) {
@@ -28,12 +28,12 @@ const getSeguroMedicoPaciente = async (req, res) => {
 }
 
 const postSeguroMedicoPaciente = async (req, res) => {
-    const {  empleado_id, seguromedico_id, importe_mensual,descripcion} = req.body;
+    const {  paciente_id, seguromedico_id, importe_mensual,descripcion} = req.body;
 
             const errors = [];
   
-            if (!empleado_id) {
-              errors.push('Ingresar el Id empleado');
+            if (!paciente_id) {
+              errors.push('Ingresar el Id paciente');
             }
             if (!seguromedico_id) {
                 errors.push('Ingresar el ID del seguro médico');
@@ -53,7 +53,7 @@ const postSeguroMedicoPaciente = async (req, res) => {
             }
    
     try{
-        const response = await createSeguroMedicoPacienteController({empleado_id, seguromedico_id, importe_mensual,descripcion})
+        const response = await createSeguroMedicoPacienteController({paciente_id, seguromedico_id, importe_mensual,descripcion})
         res.status(200).json(response);
     }
     catch(error){
@@ -64,15 +64,15 @@ const postSeguroMedicoPaciente = async (req, res) => {
 
 const putSeguroMedicoPaciente = async (req, res) => {
     const { id } = req.params;
-    const { empleado_id,seguromedico_id,importe_mensual, descripcion } = req.body; // Asegúrate de que los datos se envíen en el cuerpo de la solicitud
+    const { paciente_id,seguromedico_id,importe_mensual, descripcion } = req.body; // Asegúrate de que los datos se envíen en el cuerpo de la solicitud
      
     const errors = [];
   
         if (!id) {
-            errors.push('Ingresar el Id del registro del seguro medico del empleado');
+            errors.push('Ingresar el Id del registro del seguro medico del paciente');
         }
-        if (!empleado_id) {
-            errors.push('Ingresar el Id empleado');
+        if (!paciente_id) {
+            errors.push('Ingresar el Id paciente');
         }
         if (!seguromedico_id) {
             errors.push('Ingresar el ID del seguro médico');
@@ -93,7 +93,7 @@ const putSeguroMedicoPaciente = async (req, res) => {
  
 
     try {
-        const updatedSegurosMedicos = await modificarSeguroMedicoPacienteController(id, empleado_id, seguromedico_id,importe_mensual, descripcion);
+        const updatedSegurosMedicos = await modificarSeguroMedicoPacienteController(id, paciente_id, seguromedico_id,importe_mensual, descripcion);
         res.status(200).json({
             message: `Se modificó correctamente el seguro médico con el ID ${id}`,
             data: updatedSegurosMedicos
