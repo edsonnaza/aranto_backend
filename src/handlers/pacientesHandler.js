@@ -69,9 +69,9 @@ const getPacientePorIdHandler = async (req, res) => {
       const response = await getPacientePorIdController(id);
 
       if (response.message) {
-          return res.status(404).json({ message: response.message });
+          return res.status(200).json({ message: response.message });
       } else {
-          res.json(response);
+          res.status(200).json({message:response.details});
       }
   } catch (error) {
       res.status(400).json({ error: error.message });
@@ -236,12 +236,13 @@ console.log('body paciente handler', req.body )
   };
   
   const deletePacienteHandler = async (req, res) => {
-    const { paciente_id } = req.body;
+    const { id, activo } = req.params; // Obtiene el id de los parámetros de la ruta
+    console.log('Paciente handler:',{ id,activo });
     // Borrado Logico siempre. activo/inactivo
     try {
-      const response = await deletePacienteController(paciente_id);
+      const response = await deletePacienteController(id);
   
-      res.json(response);
+      res.status(200).json({response});
     } catch (error) {
       res.status(400).json({ error: error.message });
     }

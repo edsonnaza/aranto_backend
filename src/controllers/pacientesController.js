@@ -1,4 +1,5 @@
 require("dotenv").config();
+const moment = require('moment');
 
 // const { pacientes,Remuneraciones, CatFun, 
 //         HorasCatedrasTrabajadas, HorasCatedrasMensual, 
@@ -42,6 +43,7 @@ const PacientesPerPageController= async (paginaActual) => {
 //     return error;
 //   }
 // };
+
 
 const getPacienteController = async (id) => {
   try {
@@ -232,13 +234,13 @@ const allPacientesController = async () => {
 };
 
 
-const deletePacienteController = async (paciente_id) => {
+const deletePacienteController = async ( id,activo) => {
 
   try {
-    const paciente = await Pacientes.findByPk(paciente_id);
-
+    const paciente = await Pacientes.findByPk(id);
+    
     if (!paciente) {
-      return "No existe el paciente buscado!";
+      return {message:"No existe el paciente buscado!"};
     }
     // if (paciente.destacado == true) {
     //   await Pacientes.update(
@@ -251,11 +253,12 @@ const deletePacienteController = async (paciente_id) => {
       await Pacientes.update(
         { activo: !paciente.activo },
         {
-          where: { paciente_id: paciente_id },
+          where: { paciente_id:  id },
         }
       );
    // }
-    return await Pacientes.findByPk(paciente_id);
+    return await Pacientes.findByPk( id, { 
+      attributes: { exclude: ['createdAt', 'updatedAt'] }});
   } catch (error) {
     return error;
   }
@@ -539,11 +542,23 @@ if (paciente) {
 };
 
 const getPacientePorIdController = async (id) => {
-  const response = await Pacientes.findByPk(id);
+  
+  const response = await Pacientes.findByPk(id, {
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+       
+            });
+  
   if (response === null) {
-    return "El paciente no existe";
+    return {message:"Paciente no encontrado, favor intentar con otro id"};
   } else {
-    return response;
+    // Crear una copia del objeto response para no modificar la fecha original
+    const formattedResponse = {
+      ...response.toJSON(),
+        fechaNacimiento: moment(response.fechaNacimiento).format("DD MMMM YYYY") // Formato deseado
+    };
+    
+    return { details: formattedResponse };
+    
   }
 };
 
@@ -565,7 +580,7 @@ const getPacientePorIdController = async (id) => {
 // };
 
 const asociarSeguroMedicoPaciente = async (pacienteId, seguromedicoId) => {
-  console.log({'seguromedico_id':seguromedicoId})
+   
   try {
     // Asocia el seguro médico con el paciente
    // await paciente.addSeguroMedicoPaciente([seguromedico_id]);

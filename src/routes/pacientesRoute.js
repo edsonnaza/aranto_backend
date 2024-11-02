@@ -15,7 +15,7 @@ pacientes.get("/", getAllPacientesHandler);
 pacientes.get("/detalle/:id", getPacientePorIdHandler);
 pacientes.post("/", createPacienteHandler);
 pacientes.put("/update", updatePacienteHandler);
-pacientes.put("/", deletePacienteHandler);
+pacientes.put('/:id/delete-logico', deletePacienteHandler);
 
 
 module.exports = pacientes;
